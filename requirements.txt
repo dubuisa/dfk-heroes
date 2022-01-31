@@ -8,22 +8,9 @@ wheel>=0.29
 numpy
 pandas
 scikit-learn
-
-# tests/linter
-black
-coverage
-flake8
-pytest
-yapf
-
-# API
-gcsfs
-google-cloud-storage
-mlflow
-s3fs
-
-# utilities
-six>=1.14
+lightgbm
+web3
 joblib
-memoized-property
-termcolor
+
+streamlit-heroku
+streamlit
