@@ -4,7 +4,7 @@ import joblib
 import os
 from pathlib import Path
 import matplotlib.pyplot as pl
-
+import json
 from model import ClassRankExtractor, DateFeaturesExtractor, ToCategory
 from utils import get_dataset_description, hero_to_feature, hero_to_display
 from PIL import Image
@@ -37,6 +37,13 @@ def main():
             color: #FBE375
         }
         
+        .big-font {
+            font-size : 1.7rem;
+        }
+        
+        code, p, label {
+            font-size : 1.3rem;
+        }
         
         </style>
 
@@ -72,18 +79,19 @@ def main():
         return feature, pipe.predict(feature)[0]
     
     if st.button('Predict price'):
+        c = st.container()
+        
         feature, price = predict(hero_id)
-        st.dataframe(hero_to_display(feature.copy(deep=True)))
-        st.write('Hero price:')
-        col1, col2, _ = st.columns([1.8, 1, 20])
+        c.json(json.dumps(hero_to_display(feature.copy(deep=True))))
+        col1, col2, _ = c.columns([4, 1, 8])
         with col1: 
-            st.write(f'{price:.3f}')
+            col1.markdown(f'<p class="big-font">Hero Price: {price:.3f}</p>', unsafe_allow_html=True)
         with col2:
-            st.image(jewel, width=24)
+            col2.image(jewel, width=42)
             
         shap_values = get_shap_values(explainer, pipe[:-1].transform(feature))
         custom_waterfall(explainer,shap_values, feature)
-        st.pyplot(bbox_inches='tight')
+        c.pyplot(bbox_inches='tight')
         pl.clf()
     
     

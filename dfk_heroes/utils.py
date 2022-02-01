@@ -75,4 +75,4 @@ def hero_to_display(feature):
         5 : 'Saturday',
         6 : 'Sunday'
     }
-    return feature.assign(buyWeekDay = lambda X: X['buyWeekDay'].map(mapping))
+    return feature.assign(buyWeekDay = lambda X: X['buyWeekDay'].map(mapping)).to_dict('records')[0]
