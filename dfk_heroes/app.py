@@ -47,7 +47,7 @@ def main():
             unsafe_allow_html=True,
         )
     st.image(os.path.join(Path(__file__).parent, 'data/logo.png'))
-    st.subheader('Created by: Antoine Dubuis & Karim Steiner')
+    st.subheader('Created by: Mrmarx & Gambarim')
     st.markdown('This app aims to answer the question: how valuable is my DFK Heroes using AI')
     
     

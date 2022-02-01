@@ -45,7 +45,11 @@ def hero_to_feature(hero_id, rpc='https://api.harmony.one/'):
         'endurance': 'END',
         'dexterity': 'DEX'
     }
-
+    
+    remaining_summons = h['summoningInfo']['maxSummons']-h['summoningInfo']['summons']
+    if remaining_summons < 0:
+        remaining_summons = h['summoningInfo']['maxSummons']
+        
     return pd.DataFrame.from_records([{
                 'rarity': h['info']['rarity'],
                 'generation': h['info']['generation'] ,
@@ -54,7 +58,7 @@ def hero_to_feature(hero_id, rpc='https://api.harmony.one/'):
                 'statBoost1': mapping[h['info']['statGenes']['statBoost1']],
                 'statBoost2': mapping[h['info']['statGenes']['statBoost2']],
                 'profession': h['info']['statGenes']['profession'],
-                'summons': h['summoningInfo']['summons'],
+                'summons': remaining_summons,
                 'maxSummons': h['summoningInfo']['maxSummons'],
                 'timeStamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }])

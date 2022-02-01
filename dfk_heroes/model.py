@@ -81,8 +81,8 @@ def train(X_train, X_test, y_train, y_test):
         LGBMRegressor(**hyper_parameter)
     )
     
-    X_train_transformed = pipe[:-1].fit_transform(X_train)
-    X_test_transformed = pipe[:-1].transform(X_test)
+    X_train_transformed = pipe[:-1].fit_transform(X_train.copy(deep=True))
+    X_test_transformed = pipe[:-1].transform(X_test.copy(deep=True))
     
     cat_features = list(X_train_transformed.columns[X_train_transformed.dtypes=="category"])
     pipe[-1].fit(X_train_transformed, y_train, eval_set=(X_test_transformed, y_test), categorical_feature=cat_features)
@@ -98,6 +98,7 @@ def to_x_y(df):
     return df.drop(columns=['soldPrice', 'id']), df['soldPrice']
 
 
+
 if __name__ == "__main__":
     
     df = (
@@ -110,7 +111,7 @@ if __name__ == "__main__":
     
     joblib.dump(pipe, os.path.join(Path(__file__).parent, 'data/model.joblib'))
     
-    df_cv = pipe[:-1].transform(X_test)
+    df_cv = pipe[:-1].transform(X_test.copy(deep=True))
     # compute SHAP values
     explainer = shap.TreeExplainer(pipe[-1])
     joblib.dump(explainer, os.path.join(Path(__file__).parent, 'data/explainer.joblib'))
