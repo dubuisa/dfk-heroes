@@ -17,6 +17,8 @@ import matplotlib.image as image
 import os
 from pathlib import Path
 
+pl.style.use('dark_background')
+
 def _custom_waterfall(shap_values, max_display=10, show=True):
     """ Plots an explantion of a single prediction as a waterfall plot.
     The SHAP value of a feature represents the impact of the evidence provided by that feature on the model's
@@ -47,7 +49,7 @@ def _custom_waterfall(shap_values, max_display=10, show=True):
     values = shap_values.values
 
     
-    fig, ax = pl.subplots()
+    fig, ax = pl.subplots(figsize=(10,5))
 
     # make sure we only have a single output to explain
     if (type(base_values) == np.ndarray and len(base_values) > 0) or type(base_values) == list:
@@ -293,7 +295,6 @@ def _custom_waterfall(shap_values, max_display=10, show=True):
     for i in range(num_features):
         tick_labels[i].set_color("#999999")
     
-    pl.title('Price variation by variables')
     if show:
         pl.show()
         

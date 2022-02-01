@@ -18,7 +18,7 @@ def main():
     st.set_page_config(
      page_title="DFK Heroes Price Prediction",
      page_icon=jewel,
-     layout="wide",
+     layout="centered",
      initial_sidebar_state="expanded",
  )
         
@@ -37,10 +37,7 @@ def main():
             color: #FBE375
         }
         
-        .fullScreenFrame > div {
-           display: flex;
-           justify-content: center;
-        }
+        
         </style>
 
         """,
@@ -78,7 +75,7 @@ def main():
         feature, price = predict(hero_id)
         st.dataframe(hero_to_display(feature.copy(deep=True)))
         st.write('Hero price:')
-        col1, col2, _ = st.columns([1, 1, 20])
+        col1, col2, _ = st.columns([1.8, 1, 20])
         with col1: 
             st.write(f'{price:.3f}')
         with col2:

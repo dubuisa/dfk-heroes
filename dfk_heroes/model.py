@@ -95,7 +95,7 @@ def remove_outlier(df):
     return df[(np.abs(stats.zscore(df['soldPrice'])) < 1)]
 
 def to_x_y(df):
-    return df.drop(columns=['soldPrice', 'id']), df['soldPrice']
+    return df.drop(columns=['soldPrice']), df['soldPrice']
 
 
 

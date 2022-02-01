@@ -51,6 +51,7 @@ def hero_to_feature(hero_id, rpc='https://api.harmony.one/'):
         remaining_summons = h['summoningInfo']['maxSummons']
         
     return pd.DataFrame.from_records([{
+                'id': hero_id,
                 'rarity': h['info']['rarity'],
                 'generation': h['info']['generation'] ,
                 'mainClass': h['info']['class'].capitalize(),
@@ -61,6 +62,7 @@ def hero_to_feature(hero_id, rpc='https://api.harmony.one/'):
                 'summons': remaining_summons,
                 'maxSummons': h['summoningInfo']['maxSummons'],
                 'timeStamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                
     }])
     
 def hero_to_display(feature):
