@@ -97,6 +97,7 @@ def remove_outlier(df):
 def to_x_y(df):
     return df.drop(columns=['soldPrice', 'id']), df['soldPrice']
 
+
 if __name__ == "__main__":
     
     df = (

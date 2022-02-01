@@ -9,10 +9,24 @@ from pathlib import Path
 
 from model import ClassRankExtractor, DateFeaturesExtractor, ToCategory
 from hero import hero
+from utils import get_dataset_description
+from PIL import Image
 
 def main():
+    jewel = Image.open(os.path.join(Path(__file__).parent, 'data/favicon.png'))
+
+    
+    st.set_page_config(
+     page_title="DFK Heroes Price Prediction",
+     page_icon=jewel,
+     layout="wide",
+     initial_sidebar_state="expanded",
+ )
     st.title('Predicting DFK Heroes price using Artificial Intelligence')
     st.subheader('Created by: Antoine Dubuis & Karim Steiner')
+    st.markdown('This app aims to answer the question: how valuable is my DFK Heroes.')
+    
+    
     @st.cache
     def load_data():
         pipe = joblib.load(os.path.join(Path(__file__).parent, 'data/model.joblib'))
@@ -21,12 +35,18 @@ def main():
     # Create a text element and let the reader know the data is loading.
     
     data_load_state = st.text('Loading data...')
-    
+    st.markdown(get_dataset_description())
     pipe, df = load_data()
     # Notify the reader that the data was successfully loaded.
     data_load_state.text('Loading data...done!')
     
-    hero_id = st.number_input('Enter your hero id!', min_value=0)
+    st.markdown("""
+    Predict the price of a hero
+    ---------------------------
+    
+    You can simply predict an hero's price using it's `hero_id`.
+    """)
+    hero_id = st.number_input('hero_id', min_value=0)
     
     def hero_to_feature(hero_id, rpc='https://api.harmony.one/'):
         h = hero.get_hero(hero_id, rpc)
@@ -42,7 +62,7 @@ def main():
             'dexterity': 'DEX'
         }
 
-        return {
+        return pd.DataFrame.from_records([{
                     'rarity': h['info']['rarity'],
                     'generation': h['info']['generation'] ,
                     'mainClass': h['info']['class'].capitalize(),
@@ -53,17 +73,22 @@ def main():
                     'summons': h['summoningInfo']['summons'],
                     'maxSummons': h['summoningInfo']['maxSummons'],
                     'timeStamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
+        }])
     
     def predict(hero_id):
         feature = hero_to_feature(hero_id)
-        return feature, pipe.predict(pd.DataFrame.from_records([feature]))[0]
+        return feature, pipe.predict(feature)[0]
     
     if st.button('Predict price'):
         feature, price = predict(hero_id)
-        st.json(json.dumps(feature))
-        st.write(f'Hero values: {price:.3f} JEWEL')
-
+        st.dataframe(feature)
+        st.write('Hero price:')
+        col1, col2, _ = st.columns([1, 1, 20])
+        with col1: 
+            st.write(f'{price:.3f}')
+        with col2:
+            st.image(jewel, width=24)
+    
     
     
 if __name__== '__main__':
