@@ -1,3 +1,7 @@
+from hero import hero
+import pandas as pd
+import datetime
+
 def get_dataset_description():
     return """
         Tavern dataset
@@ -27,3 +31,42 @@ def get_dataset_description():
         
         :Description: This dataset contains all heroes transaction from 2022-01-21 13:17:04 to 2022-01-28 00:01:13.
     """
+    
+def hero_to_feature(hero_id, rpc='https://api.harmony.one/'):
+    h = hero.get_hero(hero_id, rpc)
+    h = hero.human_readable_hero(h)
+    mapping = {
+        'strength' : 'STR',
+        'agility': 'AGI',
+        'intelligence' : 'INT',
+        'wisdom' : 'WIS',
+        'luck' : 'LCK',
+        'vitality' : 'VIT',
+        'endurance': 'END',
+        'dexterity': 'DEX'
+    }
+
+    return pd.DataFrame.from_records([{
+                'rarity': h['info']['rarity'],
+                'generation': h['info']['generation'] ,
+                'mainClass': h['info']['class'].capitalize(),
+                'subClass': h['info']['subClass'].capitalize(),
+                'statBoost1': mapping[h['info']['statGenes']['statBoost1']],
+                'statBoost2': mapping[h['info']['statGenes']['statBoost2']],
+                'profession': h['info']['statGenes']['profession'],
+                'summons': h['summoningInfo']['summons'],
+                'maxSummons': h['summoningInfo']['maxSummons'],
+                'timeStamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }])
+    
+def hero_to_display(feature):
+    mapping = {
+        0 : 'Monday',
+        1 : 'Tuesday',
+        2 : 'Wednesday',
+        3 : 'Thursday',
+        4 : 'Friday',
+        5 : 'Saturday',
+        6 : 'Sunday'
+    }
+    return feature.assign(buyWeekDay = lambda X: X['buyWeekDay'].map(mapping))

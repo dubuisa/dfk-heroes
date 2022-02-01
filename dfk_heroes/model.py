@@ -2,7 +2,7 @@ from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import train_test_split
 from scipy import stats
-
+import shap
 from lightgbm import LGBMRegressor
 
 import pandas as pd
@@ -109,4 +109,10 @@ if __name__ == "__main__":
     pipe = train(X_train, X_test, y_train, y_test)
     
     joblib.dump(pipe, os.path.join(Path(__file__).parent, 'data/model.joblib'))
+    
+    df_cv = pipe[:-1].transform(X_test)
+    # compute SHAP values
+    explainer = shap.TreeExplainer(pipe[-1])
+    joblib.dump(explainer, os.path.join(Path(__file__).parent, 'data/explainer.joblib'))
+    shap_values = explainer.shap_values(df_cv)
     

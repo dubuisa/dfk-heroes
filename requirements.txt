@@ -12,5 +12,6 @@ scikit-learn
 lightgbm
 web3
 joblib
+shap
 
 streamlit
