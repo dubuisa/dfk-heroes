@@ -22,9 +22,34 @@ def main():
      layout="wide",
      initial_sidebar_state="expanded",
  )
-    st.title('Predicting DFK Heroes price using Artificial Intelligence')
+        
+    st.markdown(
+    """
+            <style>
+        @font-face {
+        font-family: 'Lora';
+        font-weight: 400;
+        src: local('Lora Regular'), local('Lora-Regular'), url(https://fonts.gstatic.com/s/lora/v14/0QIvMX1D_JOuMwf7I-NP.woff2) format('woff2');
+        unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+
+        h1, h2, h3, h4 [class*="css"]  {
+            font-family: 'Lora';
+            color: #FBE375
+        }
+        
+        .fullScreenFrame > div {
+           display: flex;
+           justify-content: center;
+        }
+        </style>
+
+        """,
+            unsafe_allow_html=True,
+        )
+    st.image(os.path.join(Path(__file__).parent, 'data/logo.png'))
     st.subheader('Created by: Antoine Dubuis & Karim Steiner')
-    st.markdown('This app aims to answer the question: how valuable is my DFK Heroes.')
+    st.markdown('This app aims to answer the question: how valuable is my DFK Heroes using AI')
     
     
     @st.cache
@@ -34,11 +59,8 @@ def main():
         return pipe, df
     # Create a text element and let the reader know the data is loading.
     
-    data_load_state = st.text('Loading data...')
     st.markdown(get_dataset_description())
     pipe, df = load_data()
-    # Notify the reader that the data was successfully loaded.
-    data_load_state.text('Loading data...done!')
     
     st.markdown("""
     Predict the price of a hero

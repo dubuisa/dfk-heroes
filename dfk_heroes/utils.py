@@ -1,6 +1,6 @@
 def get_dataset_description():
     return """
-        Tavern Data dataset
+        Tavern dataset
     ---------------------------
 
     **Dataset Characteristics:**  
