@@ -9,15 +9,15 @@ from model import ClassRankExtractor, DateFeaturesExtractor, ToCategory
 from utils import get_dataset_description, hero_to_feature, hero_to_display
 from PIL import Image
 from custom_shap import get_shap_values, custom_waterfall
+import base64
 def main():
     st.set_option('deprecation.showPyplotGlobalUse', False)
     
-    jewel = Image.open(os.path.join(Path(__file__).parent, 'data/favicon.png'))
-
+    jewel = base64.b64encode(open(os.path.join(Path(__file__).parent, 'data/favicon.png'), "rb").read()).decode()
     
     st.set_page_config(
      page_title="DFK Heroes Price Prediction",
-     page_icon=jewel,
+     page_icon=Image.open(os.path.join(Path(__file__).parent, 'data/favicon.png')),
      layout="centered",
      initial_sidebar_state="expanded",
  )
@@ -43,6 +43,18 @@ def main():
         
         code, p, label {
             font-size : 1.3rem;
+        }
+        
+        .container {
+            display: flex;
+        }
+        .logo-text {
+            font-size : 1.7rem;
+        }
+        .logo-img {
+            float:left;
+            width: 42px;
+            height: 42px;
         }
         
         </style>
@@ -83,12 +95,15 @@ def main():
         
         feature, price = predict(hero_id)
         c.json(json.dumps(hero_to_display(feature.copy(deep=True))))
-        col1, col2, _ = c.columns([4, 1, 8])
-        with col1: 
-            col1.markdown(f'<p class="big-font">Hero Price: {price:.3f}</p>', unsafe_allow_html=True)
-        with col2:
-            col2.image(jewel, width=42)
-            
+        c.markdown(
+            f"""
+            <div class="container">
+                <p class="logo-text">The predicted price is {price:.3f}</p>
+                <img class="logo-img" src="data:image/png;base64,{jewel}">
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
         shap_values = get_shap_values(explainer, pipe[:-1].transform(feature))
         custom_waterfall(explainer,shap_values, feature)
         c.pyplot(bbox_inches='tight')
