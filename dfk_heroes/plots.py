@@ -1,14 +1,15 @@
 import altair as alt
 import pandas as pd
 
+
 def advanced_analytics(df_cv, width=500, height=250):
 
     brush = alt.selection(type='interval',resolve='global')
 
     points = alt.Chart(df_cv).mark_point().encode(
-        x='TSNE-1',
-        y='TSNE-2',
-        color=alt.Color('Predicted soldPrice (Quintile)',scale=alt.Scale(scheme='redyellowgreen'))
+        x='t-SNE-1',
+        y='t-SNE-2',
+        color=alt.Color('Predicted soldPrice (Quantile)',scale=alt.Scale(scheme='redyellowgreen'))
     ).add_selection(
         brush
     ).properties(
@@ -18,9 +19,9 @@ def advanced_analytics(df_cv, width=500, height=250):
 
 
     bars_quantile = alt.Chart(df_cv).mark_bar().encode(
-        y='Predicted soldPrice (Quintile)',
-        color=alt.Color('Predicted soldPrice (Quintile)'),
-        x='count(Predicted soldPrice (Quintile))'
+        y='Predicted soldPrice (Quantile)',
+        color=alt.Color('Predicted soldPrice (Quantile)'),
+        x='count(Predicted soldPrice (Quantile))'
     ).transform_filter(
         brush
     ).properties(
@@ -30,8 +31,8 @@ def advanced_analytics(df_cv, width=500, height=250):
 
     bars_profession = alt.Chart(df_cv).mark_bar().encode(
         y='profession',
-        color='Predicted soldPrice (Quintile)',
-        x='count(Predicted soldPrice (Quintile))'
+        color='Predicted soldPrice (Quantile)',
+        x='count(Predicted soldPrice (Quantile))'
     ).transform_filter(
         brush
     ).properties(
@@ -41,8 +42,8 @@ def advanced_analytics(df_cv, width=500, height=250):
 
     bars_rarity = alt.Chart(df_cv).mark_bar().encode(
         y='rarity',
-        color='Predicted soldPrice (Quintile)',
-        x='count(Predicted soldPrice (Quintile))'
+        color='Predicted soldPrice (Quantile)',
+        x='count(Predicted soldPrice (Quantile))'
     ).transform_filter(
         brush
     ).properties(
@@ -52,8 +53,8 @@ def advanced_analytics(df_cv, width=500, height=250):
 
     bars_mainclass = alt.Chart(df_cv).mark_bar().encode(
         y='mainClass',
-        color='Predicted soldPrice (Quintile)',
-        x='count(Predicted soldPrice (Quintile))'
+        color='Predicted soldPrice (Quantile)',
+        x='count(Predicted soldPrice (Quantile))'
     ).transform_filter(
         brush
     ).properties(
@@ -63,8 +64,8 @@ def advanced_analytics(df_cv, width=500, height=250):
 
     bars_generation = alt.Chart(df_cv).mark_bar().encode(
         y='generation',
-        color='Predicted soldPrice (Quintile)',
-        x='count(Predicted soldPrice (Quintile))'
+        color='Predicted soldPrice (Quantile)',
+        x='count(Predicted soldPrice (Quantile))'
     ).transform_filter(
         brush
     ).properties(
@@ -74,8 +75,8 @@ def advanced_analytics(df_cv, width=500, height=250):
 
     bars_summons = alt.Chart(df_cv).mark_bar().encode(
         y='summons',
-        color='Predicted soldPrice (Quintile)',
-        x='count(Predicted soldPrice (Quintile))'
+        color='Predicted soldPrice (Quantile)',
+        x='count(Predicted soldPrice (Quantile))'
     ).transform_filter(
         brush
     ).properties(
@@ -85,8 +86,8 @@ def advanced_analytics(df_cv, width=500, height=250):
 
     bars_buyhour = alt.Chart(df_cv).mark_bar().encode(
         y='buyHour',
-        color='Predicted soldPrice (Quintile)',
-        x='count(Predicted soldPrice (Quintile))'
+        color='Predicted soldPrice (Quantile)',
+        x='count(Predicted soldPrice (Quantile))'
     ).transform_filter(
         brush
     ).properties(
@@ -121,6 +122,7 @@ def price_distribution(df_cv, avg_price, width=500):
     price_plot = alt.Chart(df_cv).transform_density(
         'soldPrice',
         as_=['soldPrice', 'Density'],
+        steps=300
     ).mark_area(opacity=0.93, color='#19c558').encode(
         x="soldPrice:Q",
         y='Density:Q',

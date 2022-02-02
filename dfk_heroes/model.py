@@ -70,8 +70,8 @@ def train(X_train, X_test, y_train, y_test):
         'boosting': 'gbdt',
         'min_data_in_leaf':20,
         'verbose': 1,
-        'learning_rate': 0.01,   
-        'num_boost_round': 1_000,
+        'learning_rate': 0.03,   
+        'num_boost_round': 2_000,
         'early_stopping_rounds': 2000,
         'verbose_eval': 500
     }
@@ -109,11 +109,11 @@ def save_tsne(df_cv, y_test,  shap_values, pipe):
 
     df_cv['predictedSoldPrice'] = pipe[-1].predict(df_cv)
     shap_embedded = TSNE(n_components=2, perplexity=25,random_state=34).fit_transform(shap_values)
-    df_cv['TSNE-1'] = shap_embedded[:,0]
-    df_cv['TSNE-2'] = shap_embedded[:,1]
+    df_cv['t-SNE-1'] = shap_embedded[:,0]
+    df_cv['t-SNE-2'] = shap_embedded[:,1]
     df_cv = df_cv.merge(y_test, left_index=True, right_index=True)
-    df_cv['soldPrice (Quintile)'] = pd.qcut(df_cv.soldPrice, n_quant, labels=['Bottom 20%','Middle 20% to 40%','Middle 40% to 60%','Middle 60% to 80%', 'Top 20%'])
-    df_cv['Predicted soldPrice (Quintile)'] = pd.qcut(df_cv.predictedSoldPrice, n_quant, labels=['Bottom 20%','Middle 20% to 40%','Middle 40% to 60%','Middle 60% to 80%', 'Top 20%'])
+    df_cv['soldPrice (Quantile)'] = pd.qcut(df_cv.soldPrice, n_quant, labels=['Bottom 20%','Middle 20% to 40%','Middle 40% to 60%','Middle 60% to 80%', 'Top 20%'])
+    df_cv['Predicted soldPrice (Quantile)'] = pd.qcut(df_cv.predictedSoldPrice, n_quant, labels=['Bottom 20%','Middle 20% to 40%','Middle 40% to 60%','Middle 60% to 80%', 'Top 20%'])
     
     df_cv.to_csv(os.path.join(Path(__file__).parent, 'data/cross_validation.csv'))
 

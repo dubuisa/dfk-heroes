@@ -14,8 +14,11 @@ test:
 	@coverage run -m pytest tests/*.py
 	@coverage report -m --omit="${VIRTUAL_ENV}/lib/python*"
 
-ftest:
-	@Write me
+train:
+	@python3 dfk_heroes/model.py
+
+app:
+	@streamlit run dfk_heroes/app.py
 
 clean:
 	@rm -f */version.txt
