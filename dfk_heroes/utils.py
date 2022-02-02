@@ -4,14 +4,14 @@ import datetime
 
 def get_dataset_description():
     return """
-        Tavern dataset
+        Dataset
     ---------------------------
 
-    **Dataset Characteristics:**  
+    **Tavern Dataset Characteristics:**  
 
         :Number of Instances: 8000 
 
-        :Number of Attributes: 11 numeric/categorical predictive. soldPrice is usually the target.
+        :Number of Attributes: 11 numeric/categorical predictive.
 
         :Attribute Information (in order):
             - id            Hero id
@@ -30,7 +30,31 @@ def get_dataset_description():
         :Missing Attribute Values: None
         
         :Description: This dataset contains all heroes transaction from 2022-01-21 13:17:04 to 2022-01-28 00:01:13.
+        
+        :Origin: Defi Kingdom GraphQL Database
+        
+    **Heroes Data:**
+    
+        :Origin Smart Contract data retrieved using 0rtis' DefiKingdoms toolbox 
+        
+        :Reference https://github.com/0rtis/dfk
+        
     """
+    
+def get_futures_evolutions():
+    return """
+        Futures Works
+    ---------------------------
+    
+    We were not able to finish this project, therefore our futures works are the following:
+    
+    - Retrieve sales data directly from GraphQL
+    - Periodically and Automatically retrain model based on last weeks sales
+    - Simulate and Calculate the impact of `level-up` and `summons` on the hero price
+    - Use additionnal features (`level`, `xp`, `shiny`, `stats`, etc)
+    - Additional charts
+    - Beautiful display for hero
+    """    
     
 def hero_to_feature(hero_id, rpc='https://api.harmony.one/'):
     h = hero.get_hero(hero_id, rpc)

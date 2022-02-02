@@ -1,4 +1,5 @@
 import altair as alt
+import pandas as pd
 
 def advanced_analytics(df_cv, width=500, height=250):
 
@@ -7,7 +8,6 @@ def advanced_analytics(df_cv, width=500, height=250):
     points = alt.Chart(df_cv).mark_point().encode(
         x='TSNE-1',
         y='TSNE-2',
-        #color=alt.condition(brush, 'Predicted soldPrice (Quintile)', alt.value('lightgray')),
         color=alt.Color('Predicted soldPrice (Quintile)',scale=alt.Scale(scheme='redyellowgreen'))
     ).add_selection(
         brush
@@ -110,3 +110,54 @@ def advanced_analytics(df_cv, width=500, height=250):
             #cornerRadius=10,
         )
     )
+    
+    
+def price_distribution(df_cv, avg_price, width=500):
+    line = pd.DataFrame({
+        'X': [avg_price, avg_price],
+        'Y':  [0, 0.02],
+    })
+
+    price_plot = alt.Chart(df_cv).transform_density(
+        'soldPrice',
+        as_=['soldPrice', 'Density'],
+    ).mark_area(opacity=0.93, color='#19c558').encode(
+        x="soldPrice:Q",
+        y='Density:Q',
+    )
+
+    line_plot = alt.Chart(line).mark_line(opacity=0.8, color= '#ff0051').encode(
+        x= alt.X('X', title='soldPrice'),
+        y= alt.Y('Y', title='Density'),
+    )
+
+    return (price_plot + line_plot).properties(
+            width=width,
+            height=250
+    ).configure(
+        background='#100f21'
+    ).configure_axis(
+        labelColor='white',
+        titleColor='white'
+    )
+    
+    
+def price_explanation(df_imp, width=500):
+    chart =  alt.Chart(df_imp).mark_bar(opacity=0.93, color='#19c558').encode(
+        x='JEWEL price impact',
+        y=alt.Y('Features',sort='-x')
+    ).properties(
+            width=width,
+            height=250
+    ).configure(
+        background='#100f21'
+    ).configure_axis(
+        labelColor='white',
+        titleColor='white'
+    ).configure_legend(
+        strokeColor='gray',
+        fillColor='#EEEEEE',
+        padding=10,
+        cornerRadius=10,
+    )
+    return chart

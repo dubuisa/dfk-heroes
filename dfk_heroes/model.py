@@ -102,7 +102,7 @@ def to_x_y(df):
     return df.drop(columns=['soldPrice']), df['soldPrice']
 
 
-def compute_tsne(df_cv, y_test,  shap_values, pipe):
+def save_tsne(df_cv, y_test,  shap_values, pipe):
     # Easy segmentation
     n_quant = 5
 
@@ -118,6 +118,16 @@ def compute_tsne(df_cv, y_test,  shap_values, pipe):
     df_cv.to_csv(os.path.join(Path(__file__).parent, 'data/cross_validation.csv'))
 
 
+def save_mean_shap_values(df_cv, shap_values):
+    (
+        pd.DataFrame(shap_values,columns=df_cv.columns)
+            .abs()
+            .mean()
+            .sort_values(ascending=True)
+            .reset_index()
+            .rename(columns={'index':'Features',0:'JEWEL price impact'})
+            .to_csv(os.path.join(Path(__file__).parent, 'data/jewel_price_impact.csv'))
+    )
 
 if __name__ == "__main__":
     
@@ -136,4 +146,5 @@ if __name__ == "__main__":
     explainer = shap.TreeExplainer(pipe[-1])
     joblib.dump(explainer, os.path.join(Path(__file__).parent, 'data/explainer.joblib'))
     shap_values = explainer.shap_values(df_cv)
-    compute_tsne(df_cv, y_test,  shap_values, pipe)
+    save_tsne(df_cv.copy(deep=True), y_test,  shap_values, pipe)
+    save_mean_shap_values(df_cv, shap_values)

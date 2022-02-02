@@ -13,8 +13,9 @@ lightgbm
 web3
 joblib
 
-
+#Visualization
 shap
 matplotlib
+altair
 
 streamlit
