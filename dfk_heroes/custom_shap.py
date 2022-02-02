@@ -13,11 +13,19 @@ from shap.utils import safe_isinstance, format_value
 from shap.plots import colors
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
 import matplotlib.image as image 
-
+import matplotlib as mpl
 import os
 from pathlib import Path
 
-pl.style.use('dark_background')
+COLOR = 'white'
+BACKGROUND_COLOR = '#100f21'
+GREEN_COLOR = '#19c558'
+
+mpl.rcParams['text.color'] = COLOR
+mpl.rcParams['axes.labelcolor'] = COLOR
+mpl.rcParams['xtick.color'] = COLOR
+mpl.rcParams['ytick.color'] = COLOR
+mpl.rcParams['axes.edgecolor'] = COLOR
 
 def _custom_waterfall(shap_values, max_display=10, show=True):
     """ Plots an explantion of a single prediction as a waterfall plot.
@@ -49,8 +57,8 @@ def _custom_waterfall(shap_values, max_display=10, show=True):
     values = shap_values.values
 
     
-    fig, ax = pl.subplots(figsize=(10,5))
-
+    fig, ax = pl.subplots(figsize=(10,5), facecolor=BACKGROUND_COLOR )
+    ax.set_facecolor(BACKGROUND_COLOR)
     # make sure we only have a single output to explain
     if (type(base_values) == np.ndarray and len(base_values) > 0) or type(base_values) == list:
         raise Exception("waterfall_plot requires a scalar base_values of the model output as the first " \
@@ -133,7 +141,7 @@ def _custom_waterfall(shap_values, max_display=10, show=True):
             pos_inds.append(0)
             pos_widths.append(-remaining_impact)
             pos_lefts.append(loc + remaining_impact)
-            c = '#19c558'
+            c = GREEN_COLOR
         else:
             neg_inds.append(0)
             neg_widths.append(-remaining_impact)
@@ -145,7 +153,7 @@ def _custom_waterfall(shap_values, max_display=10, show=True):
     
     # draw invisible bars just for sizing the axes
     label_padding = np.array([0.1*dataw if w < 1 else 0 for w in pos_widths])
-    pl.barh(pos_inds, np.array(pos_widths) + label_padding + 0.02*dataw, left=np.array(pos_lefts) - 0.01*dataw, color='#19c558', alpha=0)
+    pl.barh(pos_inds, np.array(pos_widths) + label_padding + 0.02*dataw, left=np.array(pos_lefts) - 0.01*dataw, color=GREEN_COLOR, alpha=0)
     label_padding = np.array([-0.1*dataw  if -w < 1 else 0 for w in neg_widths])
     pl.barh(neg_inds, np.array(neg_widths) + label_padding - 0.02*dataw, left=np.array(neg_lefts) + 0.01*dataw, color=colors.blue_rgb, alpha=0)
     
@@ -168,7 +176,7 @@ def _custom_waterfall(shap_values, max_display=10, show=True):
         arrow_obj = pl.arrow(
             pos_lefts[i], pos_inds[i], max(dist-hl_scaled, 0.000001), 0,
             head_length=min(dist, hl_scaled),
-            color='#19c558', width=bar_width,
+            color=GREEN_COLOR, width=bar_width,
             head_width=bar_width
         )
         
@@ -193,7 +201,7 @@ def _custom_waterfall(shap_values, max_display=10, show=True):
             
             txt_obj = pl.text(
                 pos_lefts[i] + (5/72)*bbox_to_xscale + dist, pos_inds[i], format_value(pos_widths[i], '%+0.02f'),
-                horizontalalignment='left', verticalalignment='center', color='#19c558',
+                horizontalalignment='left', verticalalignment='center', color=GREEN_COLOR,
                 fontsize=12
             )
     
