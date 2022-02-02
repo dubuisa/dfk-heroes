@@ -88,7 +88,7 @@ def main():
             unsafe_allow_html=True,
         )
     st.image(os.path.join(Path(__file__).parent, 'data/logo.png'))
-    st.subheader('Created by Mrmarx & Gambarim')
+    st.subheader('Created by Dubuisa & Gambarim')
     st.markdown("""
     Welcome to `DFK-Heroes Price Prediction`, our submission for the Data Visualisation Contest.
     
@@ -160,6 +160,12 @@ We want to show that data can be visualised in a more informative way thanks to 
     
     st.markdown(utils.get_dataset_description())
     st.markdown(utils.get_futures_evolutions())
+    st.markdown("""
+    Source code
+    ---------------------------
+           
+       https://github.com/dubuisa/dfk-heroes         
+    """)
 if __name__== '__main__':
     main()
 
