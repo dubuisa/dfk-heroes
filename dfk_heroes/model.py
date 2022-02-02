@@ -1,6 +1,8 @@
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import train_test_split
+from sklearn.manifold import TSNE
+
 from scipy import stats
 import shap
 from lightgbm import LGBMRegressor
@@ -88,14 +90,32 @@ def train(X_train, X_test, y_train, y_test):
     pipe[-1].fit(X_train_transformed, y_train, eval_set=(X_test_transformed, y_test), categorical_feature=cat_features)
     return pipe
 
+
 def remove_outlier(df):
     """
     Removes outliers that have a serious impact on the model
     """
     return df[(np.abs(stats.zscore(df['soldPrice'])) < 1)]
 
+
 def to_x_y(df):
     return df.drop(columns=['soldPrice']), df['soldPrice']
+
+
+def compute_tsne(df_cv, y_test,  shap_values, pipe):
+    # Easy segmentation
+    n_quant = 5
+
+
+    df_cv['predictedSoldPrice'] = pipe[-1].predict(df_cv)
+    shap_embedded = TSNE(n_components=2, perplexity=25,random_state=34).fit_transform(shap_values)
+    df_cv['TSNE-1'] = shap_embedded[:,0]
+    df_cv['TSNE-2'] = shap_embedded[:,1]
+    df_cv = df_cv.merge(y_test, left_index=True, right_index=True)
+    df_cv['soldPrice (Quintile)'] = pd.qcut(df_cv.soldPrice, n_quant, labels=['Bottom 20%','Middle 20% to 40%','Middle 40% to 60%','Middle 60% to 80%', 'Top 20%'])
+    df_cv['Predicted soldPrice (Quintile)'] = pd.qcut(df_cv.predictedSoldPrice, n_quant, labels=['Bottom 20%','Middle 20% to 40%','Middle 40% to 60%','Middle 60% to 80%', 'Top 20%'])
+    
+    df_cv.to_csv(os.path.join(Path(__file__).parent, 'data/cross_validation.csv'))
 
 
 
@@ -116,4 +136,4 @@ if __name__ == "__main__":
     explainer = shap.TreeExplainer(pipe[-1])
     joblib.dump(explainer, os.path.join(Path(__file__).parent, 'data/explainer.joblib'))
     shap_values = explainer.shap_values(df_cv)
-    
+    compute_tsne(df_cv, y_test,  shap_values, pipe)
