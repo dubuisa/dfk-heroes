@@ -65,14 +65,6 @@ def main():
         .container {
             display: flex;
         }
-        .logo-text {
-            font-size : 1.7rem;
-        }
-        .logo-img {
-            float:left;
-            width: 42px;
-            height: 42px;
-        }
         .red{
             color : #ff0051 !important;
         }
@@ -113,7 +105,7 @@ We want to show that data can be visualised in a more informative way thanks to 
         feature, price = predict(hero_id)
         c.json(json.dumps(utils.hero_to_display(feature.copy(deep=True))))
         shap_values = get_shap_values(explainer, pipe[:-1].transform(feature))
-        c.markdown(utils.shap_to_text(shap_values, feature, avg_price), unsafe_allow_html=True)
+        c.markdown(utils.shap_to_text(shap_values, feature, avg_price, jewel), unsafe_allow_html=True)
         custom_waterfall(explainer,shap_values, feature)
         c.pyplot(bbox_inches='tight')
         
@@ -141,6 +133,8 @@ We want to show that data can be visualised in a more informative way thanks to 
     st.altair_chart(plots.price_explanation(df_price_impact, width=700))
     st.markdown("""
                 As you can see, the `rarity`, the `profession` and the `class rank` (basic, advanced, elite or exalted) of the hero are the top 3 price drivers.
+                
+                Interestingly enough, AI finds out that depending on the time of the day you can get more or less JEWEL for your hero too!
                 """
     )
     
