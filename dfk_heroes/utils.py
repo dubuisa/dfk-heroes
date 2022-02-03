@@ -2,6 +2,9 @@ from hero import hero
 import pandas as pd
 import numpy as np
 import datetime
+from pytz import timezone
+
+TZ = timezone('EST')
 
 def get_dataset_description():
     return """
@@ -87,7 +90,7 @@ def hero_to_feature(hero_id, rpc='https://api.harmony.one/'):
                 'profession': h['info']['statGenes']['profession'],
                 'summons': remaining_summons,
                 'maxSummons': h['summoningInfo']['maxSummons'],
-                'timeStamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                'timeStamp': datetime.datetime.now(TZ).strftime("%Y-%m-%d %H:%M:%S")
     }])
     
 def hero_to_display(feature):
