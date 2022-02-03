@@ -94,7 +94,9 @@ def main():
     
 We want to show that data can be visualised in a more informative way thanks to AI.
 
-`DFK-Heroes Price Prediction` can decompose the price of a hero into multiple components. To do this, we used the tavern auction starting from the 23rd January 2022 until the 28th January 2022 in order to train an accurate model with roughly 8000 sales.            
+`DFK-Heroes Price Prediction` can decompose the price of a hero into multiple components. To do this, we used the tavern auction starting from the 23rd January 2022 until the 28th January 2022 in order to train an accurate model with roughly 8000 sales.
+
+Disclamer: As extreme prices and `gen0` were under represented within the dataset, this AI works best for heroes that are valued less than 500 JEWEL. 
     """)
     
     st.markdown("""

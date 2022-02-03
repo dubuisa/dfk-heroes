@@ -54,6 +54,7 @@ def get_futures_evolutions():
     - Simulate and calculate the impact of `level-up` and `summons` on the hero price
     - Use additionnal features (`level`, `xp`, `shiny`, `stats`, etc)
     - Additional charts
+    - Support for `gen0`
     - Card display for hero
     """    
     
