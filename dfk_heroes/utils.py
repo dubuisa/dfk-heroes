@@ -131,7 +131,7 @@ def equation(df, top_n, total, avg_price):
     tx.append(f"{plus_minus(df.iloc[top_n:]['impact'].sum(), extra_text='')} = {total:.2f} JEWEL")
     return '\n'.join(tx)
 
-def shap_to_text(shap_values, feature, avg_price, top_n = 3):
+def shap_to_text(shap_values, feature, avg_price, jewel, top_n = 3):
     shap_df = (pd.DataFrame(shap_values, columns = feature.columns)
                .T
                .rename(columns={0 : 'impact'})
@@ -142,8 +142,8 @@ def shap_to_text(shap_values, feature, avg_price, top_n = 3):
                )
     total = shap_values.sum()+avg_price
     return f"""
-        <div>
-        <p>The predicted price is {total:.2f} JEWEL</p>
+        <div style="clear: right;>
+        <p style="float: right;font-size : 1.3rem !important">The predicted price is {total:.2f}<img src="data:image/png;base64,{jewel}" width=32 height=32></p
         <p>It is {above_below(total, avg_price)} the average hero price ({avg_price:.2f} JEWEL)</p>
         <p>This can be explained by:</p>
         <ul>
