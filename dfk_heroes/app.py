@@ -23,8 +23,9 @@ def main():
         initial_sidebar_state="expanded",
     )
     def predict(hero_id):
-        feature = utils.hero_to_feature(hero_id)
-        return feature, pipe.predict(feature)[0]
+        hero = utils.hero_to_feature(hero_id)
+        feature = pipe[:-1].transform(hero.copy(deep=True))
+        return feature, pipe[-1].predict(feature)[0]
     
     @st.cache(allow_output_mutation=True)
     def load_data():
@@ -36,7 +37,7 @@ def main():
     pipe, df_cv, df_price_impact,  explainer = load_data()
 
     #warmup explainer
-    get_shap_values(explainer, pipe[:-1].transform(predict(0)[0]))
+    get_shap_values(explainer, predict(0)[0])
 
     avg_price = explainer.expected_value
     jewel = base64.b64encode(open(os.path.join(Path(__file__).parent, 'data/favicon.png'), "rb").read()).decode()
@@ -104,9 +105,9 @@ Disclamer: As extreme prices and `gen0` were under represented within the datase
     if st.button('Predict price'):
         c = st.container()
         
-        feature, price = predict(hero_id)
+        feature, _ = predict(hero_id)
         c.json(json.dumps(utils.hero_to_display(feature.copy(deep=True))))
-        shap_values = get_shap_values(explainer, pipe[:-1].transform(feature))
+        shap_values = get_shap_values(explainer, feature)
         c.markdown(utils.shap_to_text(shap_values, feature, avg_price, jewel), unsafe_allow_html=True)
         custom_waterfall(explainer,shap_values, feature)
         c.pyplot(bbox_inches='tight')

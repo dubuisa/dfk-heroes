@@ -29,7 +29,8 @@ class DateFeaturesExtractor(TransformerMixin, BaseEstimator):
         tmp = pd.to_datetime(X['timeStamp'])
         X['buyWeekDay'] = tmp.dt.weekday
         X['buyHour'] = tmp.dt.hour
-        return X.drop(columns=['timeStamp'])
+        X = X.drop(columns=['timeStamp'])
+        return X
 
     
 class ClassRankExtractor(TransformerMixin, BaseEstimator): 
@@ -87,6 +88,7 @@ def train(X_train, X_test, y_train, y_test):
     X_test_transformed = pipe[:-1].transform(X_test.copy(deep=True))
     
     cat_features = list(X_train_transformed.columns[X_train_transformed.dtypes=="category"])
+    print(X_train_transformed.columns)
     pipe[-1].fit(X_train_transformed, y_train, eval_set=(X_test_transformed, y_test), categorical_feature=cat_features)
     return pipe
 
