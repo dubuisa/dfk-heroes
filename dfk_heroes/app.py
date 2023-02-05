@@ -81,7 +81,7 @@ def main():
             unsafe_allow_html=True,
         )
     st.image(os.path.join(Path(__file__).parent, 'data/logo.png'))
-    st.subheader('Created by Dubuisa & Gambarim')
+    st.subheader('Created by Dubuisa & Steinerk')
     st.markdown("""
     Welcome to `DFK-Heroes Price Prediction`, our submission for the Data Visualisation Contest.
     
